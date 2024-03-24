@@ -12,3 +12,11 @@ class TestResourceInit(TestCase):
 
         self.assertEqual(str(resource), string_value)
         self.assertEqual(repr(resource), repr_value)
+
+    def test_create_resource_with_manufacturer(self):
+        """Test creating a resource instance with manufacturer name."""
+
+        mf = 'Nvidia'
+        resource = Resource('GeForce Experience', manufacturer=mf)
+
+        self.assertEqual(resource.manufacturer, mf)
