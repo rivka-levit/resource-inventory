@@ -5,6 +5,8 @@ class Resource:
         self.name = name
         self.manufacturer = manufacturer
         self.total = total
+        self._allocated = 0
+        self._category = None
 
     @property
     def total(self):
@@ -16,8 +18,24 @@ class Resource:
             raise ValueError('Total must be greater than 0!')
         self._total = value
 
+    @property
+    def allocated(self):
+        return self._allocated
+
+    @allocated.setter
+    def allocated(self, value):
+        if value < self.total:
+            raise ValueError('There are no enough resources available.')
+        self._allocated = value
+
+    @property
+    def category(self):
+        if self._category is None:
+            self._category = self.__class__.__name__.lower()
+        return self._category
+
     def __str__(self):
-        return f'Resource: {self.name}'
+        return self.name
 
     def __repr__(self):
         return f'Resource(name={self.name})'

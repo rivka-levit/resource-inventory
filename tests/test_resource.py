@@ -7,7 +7,7 @@ class TestResourceInit(TestCase):
         """Test creating a resource instance with name."""
 
         resource = Resource('Intel Core i9-9900K')
-        string_value = 'Resource: Intel Core i9-9900K'
+        string_value = 'Intel Core i9-9900K'
         repr_value = 'Resource(name=Intel Core i9-9900K)'
 
         self.assertEqual(str(resource), string_value)
@@ -42,3 +42,18 @@ class TestResourceInit(TestCase):
         total = 0
         with self.assertRaises(ValueError):
             Resource('Intel Core i9-9900K', total=total)
+
+    def test_create_resource_with_zero_allocated(self):
+        """Test creating a resource instance with zero allocated."""
+
+        resource = Resource('Intel Core i9', total=10)
+
+        self.assertEqual(resource.allocated, 0)
+
+    def test_create_resource_with_category_name(self):
+        """Test creating a resource instance with category 'resource'."""
+
+        resource = Resource('Intel Core i9', total=10)
+        category = 'resource'
+
+        self.assertEqual(resource.category, category)
