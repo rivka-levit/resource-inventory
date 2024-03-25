@@ -57,3 +57,10 @@ class TestResourceInit(TestCase):
         category = 'resource'
 
         self.assertEqual(resource.category, category)
+
+    def test_rest_computed_property(self):
+        """Test creating a resource instance with rest computed property."""
+
+        resource = Resource('Intel Core i9', total=10)
+
+        self.assertEqual(resource.rest, 10)
