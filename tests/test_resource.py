@@ -64,3 +64,34 @@ class TestResourceInit(TestCase):
         resource = Resource('Intel Core i9', total=10)
 
         self.assertEqual(resource.rest, 10)
+
+
+class TestResource(TestCase):
+    """Test for Resource class functionality."""
+
+    def setUp(self):
+        self.resource = Resource('Intel Core i9-9900K',
+                                 total=10,
+                                 manufacturer='Intel')
+
+    def test_claim_resource_success(self):
+        """Test claim method of Resource class."""
+
+        self.resource.claim(3)
+
+        self.assertEqual(self.resource.allocated, 3)
+        self.assertEqual(self.resource.rest, 7)
+
+    def test_claim_unavailable_resource_fails(self):
+        """Test claiming more resources than exist fails."""
+
+        with self.assertRaises(ValueError):
+            self.resource.claim(15)
+
+    def test_claim_not_rest_resource_fails(self):
+        """Test claiming more resources than rest fails."""
+
+        self.resource.claim(5)
+
+        with self.assertRaises(ValueError):
+            self.resource.claim(8)

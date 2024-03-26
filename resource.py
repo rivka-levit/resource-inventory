@@ -26,7 +26,7 @@ class Resource:
 
     @allocated.setter
     def allocated(self, value):
-        if value < self.total:
+        if value > self.total:
             raise ValueError('There are no enough resources available.')
         self._allocated = value
         self._rest = None
@@ -48,3 +48,13 @@ class Resource:
 
     def __repr__(self):
         return f'Resource(name={self.name})'
+
+    def claim(self, n: int) -> None:
+        """Take resources from the pool (as long as inventory is available)."""
+
+        if n > self.total or n > self.rest:
+            raise ValueError(
+                f'Not enough resources! {self.rest} is available.'
+            )
+
+        self.allocated += n
