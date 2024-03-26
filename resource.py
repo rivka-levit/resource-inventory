@@ -58,3 +58,13 @@ class Resource:
             )
 
         self.allocated += n
+
+    def free_up(self, n: int) -> None:
+        """Return n resources to the pool."""
+
+        if n > self.allocated:
+            raise ValueError(
+                f'Not enough resources!  {self.allocated} are allocated.'
+            )
+
+        self.allocated -= n

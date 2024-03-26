@@ -95,3 +95,20 @@ class TestResource(TestCase):
 
         with self.assertRaises(ValueError):
             self.resource.claim(8)
+
+    def test_free_up_resource_success(self):
+        """Test free up method of Resource class."""
+
+        self.resource.claim(4)
+        self.resource.free_up(2)
+
+        self.assertEqual(self.resource.allocated, 2)
+        self.assertEqual(self.resource.rest, 8)
+
+    def test_free_up_not_allocated_resource_fails(self):
+        """Test free up more resources than allocated fails."""
+
+        self.resource.claim(5)
+
+        with self.assertRaises(ValueError):
+            self.resource.free_up(7)
