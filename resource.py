@@ -6,7 +6,6 @@ class Resource:
         self.manufacturer = manufacturer
         self.total = total
         self._allocated = 0
-        self._category = None
         self._rest = None
 
     @property
@@ -33,9 +32,7 @@ class Resource:
 
     @property
     def category(self):
-        if self._category is None:
-            self._category = self.__class__.__name__.lower()
-        return self._category
+        return self.__class__.__name__.lower()
 
     @property
     def rest(self):
