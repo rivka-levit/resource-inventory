@@ -112,3 +112,19 @@ class TestResource(TestCase):
 
         with self.assertRaises(ValueError):
             self.resource.free_up(7)
+
+    def test_remove_resource_success(self):
+        """Test died method of Resource class."""
+
+        self.resource.died(1)
+
+        self.assertEqual(self.resource.total, 9)
+        self.assertEqual(self.resource.rest, 9)
+
+    def test_remove_resource_not_available_fails(self):
+        """Test removing a resource that is not available fails."""
+
+        self.resource.claim(9)
+
+        with self.assertRaises(ValueError):
+            self.resource.died(2)

@@ -68,3 +68,13 @@ class Resource:
             )
 
         self.allocated -= n
+
+    def died(self, n: int) -> None:
+        """Remove n resources from the pool."""
+
+        if n > self.total:
+            raise ValueError('Not enough resources in the pool.')
+        if n > self.rest:
+            raise ValueError('Not enough free resources available.')
+
+        self.total -= n
