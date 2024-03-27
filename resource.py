@@ -1,34 +1,21 @@
 class Resource:
     """Resource object"""
 
-    def __init__(self, name, manufacturer=None, total=1):
+    def __init__(self, name, *, manufacturer=None, total=1):
         self.name = name
         self.manufacturer = manufacturer
-        self.total = total
+        self._total = 0
         self._allocated = 0
         self._rest = None
+        self.purchased(total)
 
     @property
     def total(self):
         return self._total
 
-    @total.setter
-    def total(self, value):
-        if value <= 0:
-            raise ValueError('Total must be greater than 0!')
-        self._total = value
-        self._rest = None
-
     @property
     def allocated(self):
         return self._allocated
-
-    @allocated.setter
-    def allocated(self, value):
-        if value > self.total:
-            raise ValueError('There are no enough resources available.')
-        self._allocated = value
-        self._rest = None
 
     @property
     def category(self):
@@ -54,7 +41,8 @@ class Resource:
                 f'Not enough resources! {self.rest} is available.'
             )
 
-        self.allocated += n
+        self._allocated += n
+        self._rest = None
 
     def free_up(self, n: int) -> None:
         """Return n resources to the pool."""
@@ -64,19 +52,25 @@ class Resource:
                 f'Not enough resources!  {self.allocated} are allocated.'
             )
 
-        self.allocated -= n
+        self._allocated -= n
+        self._rest = None
 
     def died(self, n: int) -> None:
         """Remove n resources from the pool."""
 
-        if n > self.total:
+        if n >= self.total:
             raise ValueError('Not enough resources in the pool.')
         if n > self.rest:
             raise ValueError('Not enough free resources available.')
 
-        self.total -= n
+        self._total -= n
+        self._rest = None
 
     def purchased(self, n: int) -> None:
         """Add inventory to the pool."""
 
-        self.total += n
+        if self._total + n <= 0:
+            raise ValueError('Total must be greater than 0!')
+
+        self._total += n
+        self._rest = None
