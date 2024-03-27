@@ -78,3 +78,8 @@ class Resource:
             raise ValueError('Not enough free resources available.')
 
         self.total -= n
+
+    def purchased(self, n: int) -> None:
+        """Add inventory to the pool."""
+
+        self.total += n

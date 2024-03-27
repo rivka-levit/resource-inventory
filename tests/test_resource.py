@@ -128,3 +128,10 @@ class TestResource(TestCase):
 
         with self.assertRaises(ValueError):
             self.resource.died(2)
+
+    def test_purchase_resource_success(self):
+        """Test purchased method of Resource class."""
+
+        self.resource.purchased(5)
+        self.assertEqual(self.resource.total, 15)
+        self.assertEqual(self.resource.rest, 15)
