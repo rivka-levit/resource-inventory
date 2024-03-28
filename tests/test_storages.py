@@ -1,5 +1,5 @@
 from unittest import TestCase
-from storages import Storage
+from storages import Storage, HDD
 
 
 class TestStorage(TestCase):
@@ -14,3 +14,24 @@ class TestStorage(TestCase):
 
         with self.assertRaises(ValueError):
             Storage('Some Storage', 120.53, total=5)
+
+
+class TestHDD(TestCase):
+    """Tests for HDD storage class."""
+
+    def test_create_hdd_storage(self):
+        """Test creating hdd storage successfully."""
+
+        name = 'Some HDD'
+        capacity = 900
+        size = 3.5
+        rpm = 7200
+        str_expected = f'HDD {name}, {capacity} GB, {size}"'
+        repr_expected = f'HDD(name={name}, capacity={capacity}, size={size})'
+        hdd = HDD(name, capacity, size, rpm, total=15)
+
+        self.assertEqual(hdd.size, size)
+        self.assertEqual(hdd.rpm, rpm)
+        self.assertEqual(hdd.capacity_gb, capacity)
+        self.assertEqual(str(hdd), str_expected)
+        self.assertEqual(repr(hdd), repr_expected)
