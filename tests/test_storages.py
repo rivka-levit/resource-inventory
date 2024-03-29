@@ -35,3 +35,15 @@ class TestHDD(TestCase):
         self.assertEqual(hdd.capacity_gb, capacity)
         self.assertEqual(str(hdd), str_expected)
         self.assertEqual(repr(hdd), repr_expected)
+
+    def test_create_hdd_with_invalid_size_fails(self):
+        """Test creating an HDD with invalid size raises an error."""
+
+        with self.assertRaises(ValueError):
+            HDD('Some HDD', 900, 35, 7200)
+
+    def test_create_hdd_with_invalid_rpm_fails(self):
+        """Test creating an HDD with invalid rpm raises an error."""
+
+        with self.assertRaises(ValueError):
+            HDD('Some HDD', 900, 3.5, 7200.35)

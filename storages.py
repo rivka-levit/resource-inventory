@@ -20,8 +20,11 @@ class Storage(Resource):
 class HDD(Storage):
     """HDD resources."""
 
-    def __init__(self, name, capacity_gb, size, rpm, *, manufacturer=None, total=1):
-        super().__init__(name, capacity_gb, manufacturer=manufacturer, total=total)
+    def __init__(self, name, capacity_gb, size, rpm, *, manufacturer=None,
+                 total=1):
+
+        super().__init__(name, capacity_gb, manufacturer=manufacturer,
+                         total=total)
         self.size = size
         self.rpm = rpm
 
