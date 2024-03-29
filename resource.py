@@ -2,12 +2,20 @@ class Resource:
     """Resource object"""
 
     def __init__(self, name, *, manufacturer=None, total=1):
-        self.name = name
-        self.manufacturer = manufacturer
+        self._name = name
+        self._manufacturer = manufacturer
         self._total = 0
         self._allocated = 0
         self._rest = None
         self.purchased(total)
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def manufacturer(self):
+        return self._manufacturer
 
     @property
     def total(self):
