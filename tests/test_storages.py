@@ -66,3 +66,9 @@ class TestSSD(TestCase):
         self.assertEqual(ssd.capacity_gb, capacity)
         self.assertEqual(ssd.interface, interface)
         self.assertEqual(ssd.total, total)
+
+    def test_create_ssd_with_int_interface(self):
+        """Test creating a ssd with an integer interface."""
+
+        ssd = SSD('Some SSD', 2000, 358)
+        self.assertIsInstance(ssd.interface, str)
