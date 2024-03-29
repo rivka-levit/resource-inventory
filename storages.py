@@ -56,3 +56,35 @@ class HDD(Storage):
         return (f'HDD(name={self.name}, '
                 f'capacity={self.capacity_gb}, '
                 f'size={self.size})')
+
+
+class SSD(Storage):
+    """SSD storages."""
+
+    def __init__(self, name, capacity_gb, interface, *, manufacturer=None,
+                 total=1):
+        super().__init__(name, capacity_gb, manufacturer=manufacturer,
+                         total=total)
+        self.interface = interface
+
+    @property
+    def interface(self):
+        return self._interface
+
+    @interface.setter
+    def interface(self, value):
+        if not isinstance(value, str):
+            try:
+                value = str(value)
+            except TypeError:
+                raise ValueError('Interface must be a string!')
+
+        self._interface = value
+
+    def __str__(self):
+        return f'SSD {self.name} {self.capacity_gb} GB, {self.interface}'
+
+    def __repr__(self):
+        return (f'SSD(name={self.name}, '
+                f'capacity={self.capacity_gb}, '
+                f'interface={self.interface})')

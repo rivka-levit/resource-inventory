@@ -1,5 +1,5 @@
 from unittest import TestCase
-from storages import Storage, HDD
+from storages import Storage, HDD, SSD
 
 
 class TestStorage(TestCase):
@@ -47,3 +47,22 @@ class TestHDD(TestCase):
 
         with self.assertRaises(ValueError):
             HDD('Some HDD', 900, 3.5, 7200.35)
+
+
+class TestSSD(TestCase):
+    """Tests for SSD storage class."""
+
+    def test_create_ssd_successfully(self):
+        """Test creating an SSD successfully."""
+
+        name = 'Some SSD'
+        capacity = 1500
+        interface = 'PCIe NVMe 3.0 x4'
+        total = 25
+
+        ssd = SSD(name, capacity, interface, total=total)
+
+        self.assertEqual(ssd.name, name)
+        self.assertEqual(ssd.capacity_gb, capacity)
+        self.assertEqual(ssd.interface, interface)
+        self.assertEqual(ssd.total, total)
