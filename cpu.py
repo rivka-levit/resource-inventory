@@ -22,3 +22,7 @@ class CPU(Resource):
     @property
     def power_watts(self):
         return self._power_watts
+
+    def __repr__(self):
+        return (f'CPU(name={self.name}, cores={self.cores}, '
+                f'socket={self.socket}, power_watts={self.power_watts})')
