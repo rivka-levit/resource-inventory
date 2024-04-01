@@ -1,5 +1,5 @@
 from unittest import TestCase
-from resource import Resource
+from app.resource import Resource
 
 
 class TestResourceInit(TestCase):
