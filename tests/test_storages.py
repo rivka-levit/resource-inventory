@@ -1,5 +1,5 @@
 from unittest import TestCase
-from app.storages import Storage, HDD, SSD
+from app.models.storages import Storage, HDD, SSD
 
 
 class TestStorage(TestCase):

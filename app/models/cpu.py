@@ -1,4 +1,4 @@
-from app.resource import Resource
+from app.models.resource import Resource
 
 
 class CPU(Resource):
