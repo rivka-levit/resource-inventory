@@ -1,3 +1,8 @@
+"""
+Tests the Resource class.
+Command line: python -m unittest -v tests.test_resource
+"""
+
 from unittest import TestCase
 from app.models.resource import Resource
 
