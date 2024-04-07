@@ -21,7 +21,7 @@ class Resource:
         self._manufacturer = manufacturer
 
         validate_integer('total', total, min_value=0)
-        self._total = 0
+        self._total = total
 
         validate_integer(
             'allocated', allocated, 0, total,
@@ -29,8 +29,6 @@ class Resource:
                                'inventory!'
         )
         self._allocated = allocated
-        # self._rest = None
-        # self.purchased(total)
 
     @property
     def name(self):
