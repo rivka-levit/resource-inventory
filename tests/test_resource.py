@@ -1,5 +1,5 @@
 """
-Tests the Resource class.
+Tests for Resource class.
 Command line: python -m unittest -v tests.test_resource
 """
 
@@ -8,92 +8,135 @@ from app.models.resource import Resource
 
 
 class TestResourceInit(TestCase):
+    """Test __init__ method of Resource class."""
+
+    def setUp(self):
+        self.values = {
+            'name': 'Intel Core i9-9900K',
+            'total': 10,
+            'allocated': 5,
+            'manufacturer': 'Intel'
+        }
+
     def test_create_resource(self):
         """Test creating a resource instance successfully."""
 
-        name = 'Intel Core i9-9900K'
-        total = 10
-        allocated = 5
-        mf = 'Nvidia'
         category = 'resource'
+        available_expected = self.values['total'] - self.values['allocated']
 
-        string_expected = 'Intel Core i9-9900K'
-        repr_expected = (f'{name} ({category} - {mf}): '
-                         f'total={total}, allocated={allocated}')
-        available_expected = total - allocated
+        resource = Resource(**self.values)
 
-        resource = Resource(name, total, allocated, manufacturer=mf)
+        for key, value in self.values.items():
+            self.assertEqual(getattr(resource, key), value)
 
-        self.assertEqual(resource.name, name)
         self.assertEqual(resource.category, category)
-        self.assertEqual(resource.total, total)
-        self.assertEqual(resource.allocated, allocated)
-        self.assertEqual(resource.manufacturer, mf)
         self.assertEqual(resource.available, available_expected)
-        self.assertEqual(str(resource), string_expected)
-        self.assertEqual(repr(resource), repr_expected)
 
 
 class TestResource(TestCase):
     """Test for Resource class functionality."""
 
     def setUp(self):
-        self.resource = Resource('Intel Core i9-9900K', 10, 5,
-                                 manufacturer='Intel')
+        self.values = {
+            'name': 'Intel Core i9-9900K',
+            'total': 10,
+            'allocated': 5,
+            'manufacturer': 'Intel'
+        }
+        self.resource = Resource(**self.values)
+
+    def test_str_method(self):
+        """Test string representation of Resource."""
+
+        self.assertEqual(str(self.resource), self.values['name'])
+
+    def test_repr_method(self):
+        """Test __repr__ of Resource class."""
+
+        category = type(self.resource).__name__.lower()
+        repr_expected = (f'{self.values['name']} ({category} - '
+                         f'{self.values['manufacturer']}): '
+                         f'total={self.values['total']}, '
+                         f'allocated={self.values['allocated']}')
+
+        self.assertEqual(repr(self.resource), repr_expected)
 
     def test_claim_resource_success(self):
         """Test claim method of Resource class."""
 
-        self.resource.claim(3)
+        claim_val = 3
 
-        self.assertEqual(self.resource.allocated, 8)
-        self.assertEqual(self.resource.available, 2)
+        self.resource.claim(claim_val)
+
+        allocated_expected = self.values['allocated'] + claim_val
+        available_expected = self.values['total'] - allocated_expected
+
+        self.assertEqual(self.resource.allocated, allocated_expected)
+        self.assertEqual(self.resource.available, available_expected)
 
     def test_claim_unavailable_resource_fails(self):
         """Test claiming more resources than exist fails."""
 
+        claim_val = self.values['total'] + 5
+
         with self.assertRaises(ValueError):
-            self.resource.claim(15)
+            self.resource.claim(claim_val)
 
     def test_claim_not_available_resource_fails(self):
         """Test claiming more resources than available fails."""
 
-        self.resource.claim(5)
+        claim_val = self.resource.available + 5
 
         with self.assertRaises(ValueError):
-            self.resource.claim(8)
+            self.resource.claim(claim_val)
 
     def test_free_up_resource_success(self):
         """Test free up method of Resource class."""
 
-        self.resource.free_up(2)
+        free_val = 1
+        allocated_expected = self.values['allocated'] - free_val
+        available_expected = self.values['total'] - allocated_expected
 
-        self.assertEqual(self.resource.allocated, 3)
-        self.assertEqual(self.resource.available, 7)
+        self.resource.free_up(free_val)
+
+        self.assertEqual(self.resource.allocated, allocated_expected)
+        self.assertEqual(self.resource.available, available_expected)
 
     def test_free_up_not_allocated_resource_fails(self):
         """Test free up more resources than allocated fails."""
 
+        free_val = self.values['allocated'] + 1
+
         with self.assertRaises(ValueError):
-            self.resource.free_up(7)
+            self.resource.free_up(free_val)
 
     def test_remove_resource_success(self):
         """Test died method of Resource class."""
 
-        self.resource.died(1)
+        died_val = 1
+        total_expected = self.values['total'] - died_val
+        allocated_expected = self.values['allocated'] - died_val
 
-        self.assertEqual(self.resource.total, 9)
-        self.assertEqual(self.resource.allocated, 4)
+        self.resource.died(died_val)
+
+        self.assertEqual(self.resource.total, total_expected)
+        self.assertEqual(self.resource.allocated, allocated_expected)
 
     def test_remove_resource_not_allocated_fails(self):
         """Test removing more resources than allocated fails."""
 
+        died_val = self.values['allocated'] + 1
+
         with self.assertRaises(ValueError):
-            self.resource.died(8)
+            self.resource.died(died_val)
 
     def test_purchase_resource_success(self):
         """Test purchased method of Resource class."""
 
-        self.resource.purchased(5)
-        self.assertEqual(self.resource.total, 15)
-        self.assertEqual(self.resource.available, 10)
+        purchase_val = 5
+        total_expected = self.values['total'] + purchase_val
+        available_expected = total_expected - self.resource.allocated
+
+        self.resource.purchased(purchase_val)
+        self.assertEqual(self.resource.total, total_expected)
+        self.assertEqual(self.resource.available, available_expected)
