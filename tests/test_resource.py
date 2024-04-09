@@ -74,7 +74,7 @@ class TestResource(TestCase):
         self.assertEqual(self.resource.allocated, allocated_expected)
         self.assertEqual(self.resource.available, available_expected)
 
-    def test_claim_unavailable_resource_fails(self):
+    def test_claim_resource_not_exist_fails(self):
         """Test claiming more resources than exist fails."""
 
         claim_val = self.values['total'] + 5
@@ -89,6 +89,15 @@ class TestResource(TestCase):
 
         with self.assertRaises(ValueError):
             self.resource.claim(claim_val)
+
+    def test_claim_invalid_number_resources_fails(self):
+        """Test claiming negative or zero number of resources fails."""
+
+        values = [-1, 0]
+
+        for n in values:
+            with self.assertRaises(ValueError):
+                self.resource.claim(n)
 
     def test_free_up_resource_success(self):
         """Test free up method of Resource class."""
@@ -110,6 +119,15 @@ class TestResource(TestCase):
         with self.assertRaises(ValueError):
             self.resource.free_up(free_val)
 
+    def test_free_up_invalid_number_resources_fails(self):
+        """Test free up negative or zero number of resources fails."""
+
+        values = [-1, 0]
+
+        for n in values:
+            with self.assertRaises(ValueError):
+                self.resource.free_up(n)
+
     def test_remove_resource_success(self):
         """Test died method of Resource class."""
 
@@ -130,6 +148,15 @@ class TestResource(TestCase):
         with self.assertRaises(ValueError):
             self.resource.died(died_val)
 
+    def test_died_invalid_number_resources_fails(self):
+        """Test removing negative or zero number of resources fails."""
+
+        values = [-1, 0]
+
+        for n in values:
+            with self.assertRaises(ValueError):
+                self.resource.died(n)
+
     def test_purchase_resource_success(self):
         """Test purchased method of Resource class."""
 
@@ -140,3 +167,12 @@ class TestResource(TestCase):
         self.resource.purchased(purchase_val)
         self.assertEqual(self.resource.total, total_expected)
         self.assertEqual(self.resource.available, available_expected)
+
+    def test_purchase_invalid_number_resources_fails(self):
+        """Test purchase negative or zero number of resources fails."""
+
+        values = [-1, 0]
+
+        for n in values:
+            with self.assertRaises(ValueError):
+                self.resource.purchased(n)
