@@ -39,3 +39,13 @@ class TestCPU(TestCase):
         cpu = CPU(**self.cpu_values)
 
         self.assertEqual(repr(cpu), expected_repr)
+
+    def test_create_cpu_invalid_cores_fails(self):
+        """Test creating CPU resource with invalid cores fails."""
+
+        test_values = [(10.5, TypeError), (-1, ValueError), (0, ValueError)]
+
+        for value, exception in test_values:
+            self.cpu_values['cores'] = value
+            with self.assertRaises(exception):
+                CPU(**self.cpu_values)
