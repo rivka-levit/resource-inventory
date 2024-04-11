@@ -1,20 +1,37 @@
 from app.models.resource import Resource
 
+from app.utils.validators import validate_integer
+
 
 class Storage(Resource):
-    def __init__(self, name, capacity_gb, *, manufacturer=None, total=1):
-        super().__init__(name, manufacturer=manufacturer, total=total)
-        self.capacity_gb = capacity_gb
+    """A base class for storage devices."""
+
+    def __init__(self, name, total, allocated, capacity_gb, *,
+                 manufacturer=None):
+        """
+        Args:
+            name (str): display name of the resource
+            total (int): current total amount of resources
+            allocated (int): current count of in-use resources
+            manufacturer (str): resource manufacturer
+            capacity_gb (int): storage capacity in GB
+        """
+
+        super().__init__(name, total, allocated, manufacturer=manufacturer)
+        validate_integer('capacity_gb', capacity_gb, min_value=1)
+        self._capacity_gb = capacity_gb
 
     @property
     def capacity_gb(self):
+        """
+        Indicates the capacity (in GB) of the storage device.
+        Returns: int
+        """
+
         return self._capacity_gb
 
-    @capacity_gb.setter
-    def capacity_gb(self, value):
-        if not isinstance(value, int):
-            raise ValueError('Capacity_gb must be an integer!')
-        self._capacity_gb = value
+    def __repr__(self):
+        return f'{self.category}: {self.capacity_gb} GB'
 
 
 class HDD(Storage):
