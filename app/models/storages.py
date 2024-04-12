@@ -35,73 +35,84 @@ class Storage(Resource):
 
 
 class HDD(Storage):
-    """HDD resources."""
+    """HDD type resources."""
 
-    def __init__(self, name, capacity_gb, size, rpm, *, manufacturer=None,
-                 total=1):
+    def __init__(self, name, total, allocated, capacity_gb, size, rpm, *,
+                 manufacturer=None):
+        """
+        Args:
+            name (str): display name of the resource
+            total (int): current total amount of resources
+            allocated (int): current count of in-use resources
+            capacity_gb (int): storage capacity in GB
+            size (str): indicates the device's size (must be either 2.5" or 3.5")
+            rpm (int): disk rotation speed (in rpm)
+            manufacturer (str): resource manufacturer
+        """
 
-        super().__init__(name, capacity_gb, manufacturer=manufacturer,
-                         total=total)
-        self.size = size
-        self.rpm = rpm
+        super().__init__(name, total, allocated, capacity_gb,
+                         manufacturer=manufacturer)
+
+        allowed_sizes = ('2.5', '3.5')
+        if size not in allowed_sizes:
+            raise ValueError(f'Invalid HDD size.'
+                             f'Must be one of {', '.join(allowed_sizes)}')
+
+        validate_integer('rpm', rpm, min_value=1000, max_value=50000)
+
+        self._size = size
+        self._rpm = rpm
 
     @property
     def size(self):
-        return self._size
+        """
+        The HDD size (2.5" / 3.5")
+        Returns: str
+        """
 
-    @size.setter
-    def size(self, value):
-        allowed_sizes = (2.5, 3.5)
-        if value not in allowed_sizes:
-            raise ValueError('HDD size must be 2.5" or 3.5"')
-        self._size = value
+        return self._size
 
     @property
     def rpm(self):
+        """
+        The HDD spin speed (rpm)
+        Returns: int
+        """
+
         return self._rpm
 
-    @rpm.setter
-    def rpm(self, value):
-        if not isinstance(value, int):
-            raise ValueError('RPM must be an integer!')
-        self._rpm = value
-
-    def __str__(self):
-        return f'HDD {self.name}, {self.capacity_gb} GB, {self.size}"'
-
     def __repr__(self):
-        return (f'HDD(name={self.name}, '
-                f'capacity={self.capacity_gb}, '
-                f'size={self.size})')
+        s = super().__repr__()
+        return f'{s} ({self.size}, {self.rpm} rpm)'
 
 
 class SSD(Storage):
-    """SSD storages."""
+    """SSD type resources."""
 
-    def __init__(self, name, capacity_gb, interface, *, manufacturer=None,
-                 total=1):
-        super().__init__(name, capacity_gb, manufacturer=manufacturer,
-                         total=total)
-        self.interface = interface
+    def __init__(self, name, total, allocated, capacity_gb, interface, *,
+                 manufacturer=None):
+        """
+        Args:
+            name (str): display name of the resource
+            total (int): current total amount of resources
+            allocated (int): current count of in-use resources
+            capacity_gb (int): storage capacity in GB
+            interface (str): indicates the device's interface (e.g. PCIe NVMe 3.0 x4)
+            manufacturer (str): resource manufacturer
+        """
+        super().__init__(name, total, allocated, capacity_gb,
+                         manufacturer=manufacturer)
+        self._interface = interface
 
     @property
     def interface(self):
+        """
+        Interface used by SSD (e.g. PCIe NVMe 3.0 x4)
+        Returns: str
+        """
+
         return self._interface
 
-    @interface.setter
-    def interface(self, value):
-        if not isinstance(value, str):
-            try:
-                value = str(value)
-            except TypeError:
-                raise ValueError('Interface must be a string!')
-
-        self._interface = value
-
-    def __str__(self):
-        return f'SSD {self.name} {self.capacity_gb} GB, {self.interface}'
-
     def __repr__(self):
-        return (f'SSD(name={self.name}, '
-                f'capacity={self.capacity_gb}, '
-                f'interface={self.interface})')
+        s = super().__repr__()
+        return f'{s} ({self.interface})'
