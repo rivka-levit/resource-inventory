@@ -53,7 +53,7 @@ class HDD(Storage):
         super().__init__(name, total, allocated, capacity_gb,
                          manufacturer=manufacturer)
 
-        allowed_sizes = ('2.5', '3.5')
+        allowed_sizes = ('2.5"', '3.5"')
         if size not in allowed_sizes:
             raise ValueError(f'Invalid HDD size.'
                              f'Must be one of {', '.join(allowed_sizes)}')
